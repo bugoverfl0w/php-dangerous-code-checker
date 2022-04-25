@@ -3,7 +3,7 @@
 
 # how to use
 
-```
+```sh
 > ./shell_fapper.py --help
 Usage: shell_fapper.py [options]
 
@@ -23,26 +23,30 @@ Options:
                         files
 ```
 
-# example
-``` 
+# **example**
+``` sh
 ./shell_fapper.py -t 1 -m 30 -r ~/git/phpmyadmin/
 start check repo /home/quydo/git/phpmyadmin/
 /home/quydo/git/phpmyadmin/shell-test.php:shell_exec("rm -rf /tmp/aaa");
 --- /home/quydo/git/phpmyadmin/shell-test.php
 ```
 
-### -t 1 means print to stdout (your screen)
-### -m 30: just find files that modified within 30 minutes
-### -r ~/git/phpmyadmin: just check this repository code. You can add more repository to check at the same time, ex: ./shell_fapper.py -t 1 -m 30 -r ~/git/phpmyadmin/ -r /tmp/new-repo-to-check
+> -t 1 means print to stdout (your screen)
 
-```In the example code, there is dangerous code found```
+> -m 30: just find files that modified within 30 minutes
 
+> -r ~/git/phpmyadmin: just check this repository code. You can add more repository to check at the same time, ex: ./shell_fapper.py -t 1 -m 30 -r ~/git/phpmyadmin/ -r /tmp/new-repo-to-check
+
+**In the example code, there is dangerous code found**
+```sh
 /home/quydo/git/phpmyadmin/shell-test.php:shell_exec("rm -rf /tmp/aaa");
+```
 
-# variables
-### emails: email to receive notification when -e is 1
-### if you know you what you do, you can try to change keywords variable
+# **variables**
+> emails: email to receive notification when -e is 1
 
-# crontab
-### You can set crontab (linux) to monitor your server code, for example every 3 minutes
-``` */3 * * * * /path/to/shell-checker.py -e 1 -m 3 -r /path/to/php-repo-1 -r /path/to/php-repo-2```
+> if you know you what you do, you can try to change keywords variable
+
+# **crontab**
+> You can set crontab (linux) to monitor your server code, for example every 3 minutes
+```sh */3 * * * * /path/to/shell-checker.py -e 1 -m 3 -r /path/to/php-repo-1 -r /path/to/php-repo-2```
