@@ -34,7 +34,7 @@ class shell:
 
     # terminal
     debug = False
-    notify = 0
+    notify = 1
     terminal = 0
     if_modify = 0
 
@@ -193,7 +193,7 @@ class shell:
 parser = optparse.OptionParser()
 parser.add_option('-m', '--minute', action='store', dest='minutes', help='-m --minute last modify minutes to check\ndefault is check all time', default='0')
 parser.add_option('-t', '--terminal', action='store', dest='terminal', help='-t --terminal show output in terminal\ndefault is 0', default='0')
-parser.add_option('-n', '--notify', action='store', dest='notify', help='-n --notify notify result to telegram\ndefault is 0', default='0')
+parser.add_option('-n', '--notify', action='store', dest='notify', help='-n --notify notify result to telegram\ndefault is 1', default='1')
 parser.add_option('-r', '--repo', action='append', dest='repos', help='-r --repo repo to check - dir path\ndefault is current directory', default=[])
 parser.add_option('-M', '--send-if-only-modified', action='store', dest='if_modify', help='-M --send-if-only-modify send email if only modified files', default=0)
 
