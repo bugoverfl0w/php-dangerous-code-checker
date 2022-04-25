@@ -12,23 +12,24 @@ You should add @getidsbot, then it will print your chat id
 ```
 
 ```sh
-> ./shell_fapper.py --help
-Usage: shell_fapper.py [options]
+> ./shell-checker.py -h
+Usage: shell-checker.py [options]
 
 Options:
   -h, --help            show this help message and exit
   -m MINUTES, --minute=MINUTES
-                        -m --minute last modify minutes to check default is                       check all time
+                        -m --minute last modify minutes to check default is
+                        check all time
   -t TERMINAL, --terminal=TERMINAL
                         -t --terminal show output in terminal default is 0
-  -e EMAIL, --email=EMAIL
-                        -e --email email result to admins default is 0
+  -n NOTIFY, --notify=NOTIFY
+                        -n --notify notify result to telegram default is 0
   -r REPOS, --repo=REPOS
                         -r --repo repo to check - dir path default is current
                         directory
   -M IF_MODIFY, --send-if-only-modified=IF_MODIFY
                         -M --send-if-only-modify send email if only modified
-                        files
+
 ```
 
 # **Example**
