@@ -3,6 +3,9 @@
 > You can check many repos in the same time
 > It is good for monitor your php server code if there is any new/modified not by you (via crontab)
 
+# Install
+> bash -x install.sh
+
 # How to use
 > update .env file
 ```sh
