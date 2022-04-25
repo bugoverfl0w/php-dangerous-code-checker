@@ -1,17 +1,17 @@
 #!/usr/bin/env python2.7
+# -*- coding: utf-8 -*- 
 
 # @quydox
 
 import sys, os
 import optparse
 import subprocess
-import email.utils
-from email.mime.text import MIMEText
 import requests
+from dotenv import dotenv_values
+
+envs = dotenv_values(".env")
 
 class shell:
-    # admins to receiver email
-    admins = ['hello@quydox.com']
     author = os.uname()[1]
 
     # add more dangerous keywords here to search
@@ -34,7 +34,7 @@ class shell:
 
     # terminal
     debug = False
-    email = 0
+    notify = 0
     terminal = 0
     if_modify = 0
 
@@ -42,14 +42,14 @@ class shell:
     critical = 0
 
     # init class
-    def __init__(self, debug=False, minutes=0, repos=[], terminal=0, email=0, if_modify=0):
+    def __init__(self, debug=False, minutes=0, repos=[], terminal=0, notify=0, if_modify=0):
         self.debug = debug
 
         if terminal.isdigit() and int(terminal) > 0:
             self.terminal = 1
 
-        if email.isdigit() and int(email) > 0:
-            self.email = 1
+        if notify.isdigit() and int(notify) > 0:
+            self.notify = 1
 
         # time variables
         if minutes.isdigit() and int(minutes) != 0:
@@ -81,12 +81,12 @@ class shell:
                 print t
 
         #print self.msgs
-        if self.email == 1:
+        if self.notify == 1:
             if self.critical > 0:
-                self.send_emails()
+                self.send_notify()
             else:
                 if self.warn > 0 and self.if_modify > 0:
-                    self.send_emails()
+                    self.send_notify()
 
 
     # check shell in repo - dir
@@ -116,14 +116,14 @@ class shell:
             m = m.replace('<', '|')
             m = m.replace('>', '|')
             m = m.strip()
-            m = self.html_color('--- ') + m
+            m = self.html_color('%0A🥵' + '--- ') + m
             messages[f].append(self.html_color(m, 'blue'))
 
             self.critical += 1
 
         tmp = ''
         for f, m in messages.iteritems():
-            tmp = tmp + '<br />' + self.html_color(f) + '<br />' + '<br />'.join(messages[f])
+            tmp = tmp + self.html_color(f) +  ''.join(messages[f])
 
         if len(tmp) > 0:
             #self.msgs.append(tmp + '<br />')
@@ -172,21 +172,19 @@ class shell:
         if not msg:
             return False
 
-        return '<font color="%s">%s</font>' % (color, msg)
+        #return '<font color="%s">%s</font>' % (color, msg)
+        return msg
 
     # pre html
     def html_pre(self, msg):
         return '<pre>%s</pre>' % msg
 
     def telegram(self, msg):
-        posts = {
-            'group': 't4a',
-            'content': msg
-        }
+        requests.post('https://api.telegram.org/bot{}/sendMessage?chat_id={}&text={}'.format(
+            envs['TELEGRAM_BOT_TOKEN'], envs['TELEGRAM_CHAT_ID'], msg
+            ))
 
-        requests.post('http://localhost:9876/f0rw4rd', data=posts)
-
-    def send_emails(self):
+    def send_notify(self):
         message = '\n'.join(self.msgs)
 
         self.telegram(message)
@@ -195,12 +193,12 @@ class shell:
 parser = optparse.OptionParser()
 parser.add_option('-m', '--minute', action='store', dest='minutes', help='-m --minute last modify minutes to check\ndefault is check all time', default='0')
 parser.add_option('-t', '--terminal', action='store', dest='terminal', help='-t --terminal show output in terminal\ndefault is 0', default='0')
-parser.add_option('-e', '--email', action='store', dest='email', help='-e --email email result to admins\ndefault is 0', default='0')
+parser.add_option('-n', '--notify', action='store', dest='notify', help='-n --notify notify result to telegram\ndefault is 0', default='0')
 parser.add_option('-r', '--repo', action='append', dest='repos', help='-r --repo repo to check - dir path\ndefault is current directory', default=[])
 parser.add_option('-M', '--send-if-only-modified', action='store', dest='if_modify', help='-M --send-if-only-modify send email if only modified files', default=0)
 
 options, args = parser.parse_args()
-repos_, minutes_, terminal_, email_, if_modify_ = options.repos, options.minutes, options.terminal, options.email, options.if_modify
+repos_, minutes_, terminal_, notify_, if_modify_ = options.repos, options.minutes, options.terminal, options.notify, options.if_modify
 
-fap = shell(repos=repos_, minutes=minutes_, terminal=terminal_, email=email_, if_modify=if_modify_)
+fap = shell(repos=repos_, minutes=minutes_, terminal=terminal_, notify=notify_, if_modify=if_modify_)
 fap.fap()
